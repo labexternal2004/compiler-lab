@@ -1,0 +1,36 @@
+#include<stdio.h>
+#include<string.h>
+#include<ctype.h>
+int main()
+{
+  char input[100];
+  int i=0;
+  char buff[100];
+  printf("enter the statements\n");
+  fgets(input,sizeof(input),stdin);
+  printf("tokens are:\n");
+  while(input[i]!='\0')
+  {
+       if(input[i]==' '||input[i]=='\n'|| input[i]=='\t')
+       {i++; continue; }
+       else if(isalpha(input[i]))
+       {
+            int j=0;
+            while(isalnum(input[i]))
+            {
+                  buff[j++]=input[i++];
+
+             }
+            buff[j]='\0';
+            if(strcmp(buff,"main")==0||strcmp(buff,"printf")==0||strcmp(buff,"for")==0||strcmp(buff,"int")==0||strcmp(buff,"while")==0)
+            { printf("KEYWORD:%s\n",buff);}
+            else{printf("IDENTIFIER:%s\n",buff);}
+            continue;
+
+       }
+       else if(strchr("+-*/=",input[i])!=NULL){printf("OPERATOR:%c\n",input[i]);i++;continue;}
+      else if(strchr("&()#;.{}"" ",input[i])!=NULL){printf("SYMBOL:%c\n",input[i]);i++;continue;}
+       else{printf("invalid symbol\n");i++;continue;}
+  }
+
+}
