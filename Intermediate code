@@ -1,0 +1,57 @@
+#include<stdio.h>
+#include<string.h>
+#include<ctype.h>
+char expr[100],valstack[100][20],opstack[100];
+int topop=-1,topval=-1,temp=1;
+char a[10],b[10],result[10];
+int precedence(char op)
+{
+        if(op=='*'||op=='/')
+                return 2;
+        else if(op=='+'||op=='-')
+                return 1;
+        return 0;
+}
+void generate()
+{
+        char op=opstack[topop--];
+        strcpy(b,valstack[topval--]);
+        strcpy(a,valstack[topval--]);
+        sprintf(result,"t%d",temp++);
+        printf("%s=%s%c%s\n",result,a,op,b);
+        strcpy(valstack[++topval],result);
+}
+int main()
+{
+        printf("enter expr:");
+        scanf("%s",expr);
+        for(int i=0;expr[i]!='\0';i++)
+        {
+                char c=expr[i];
+                if(isalnum(c))
+                {
+                        valstack[++topval][0]=c;
+                        valstack[topval][1]='\0';
+                }
+                else if(c=='(')
+                {
+                        opstack[++topop]=c;
+                }
+                else if(c==')')
+                {
+                        while(topop>=0&&opstack[topop]!='(')
+                                generate();
+                        topop--;
+                }
+                else
+                {
+                        while(topop>=0&&opstack[topop]!='('&&precedence(opstack[topop])>=precedence(c))
+                                generate();
+                        opstack[++topop]=c;
+                }
+        }
+        while(topop>=0)
+                generate();
+        printf("result=%s",result);
+        return 0;
+}
