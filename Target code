@@ -1,0 +1,81 @@
+#include<stdio.h>
+#include<string.h>
+
+#define TAC_NO 100
+#define TAC_LEN 100
+
+char tac[TAC_NO][TAC_LEN];
+char line[100];
+
+int main()
+{
+    int n;
+
+    printf("Enter no of instructions: ");
+    scanf("%d",&n);
+    getchar();
+
+    printf("Enter instructions:\n");
+
+    for(int i=0;i<n;i++)
+    {
+        fgets(line,sizeof(line),stdin);
+        line[strcspn(line,"\n")]='\0';
+        strcpy(tac[i],line);
+    }
+
+    printf("\n8086 Assembly Code:\n");
+
+    for(int i=0;i<n;i++)
+    {
+        char result[10],op1[10],op2[10],op;
+
+        strcpy(line,tac[i]);
+
+        if(sscanf(line,"%s = %s %c %s",
+                  result,op1,&op,op2)==4)
+        {
+            printf("MOV AX,%s\n",op1);
+
+            switch(op)
+            {
+                case '+':
+                    printf("ADD AX,%s\n",op2);
+                    break;
+
+                case '-':
+                    printf("SUB AX,%s\n",op2);
+                    break;
+
+                case '*':
+                    printf("MOV BX,%s\n",op2);
+                    printf("MUL BX\n");
+                    break;
+
+                case '/':
+                    printf("MOV DX,0\n");
+                    printf("MOV BX,%s\n",op2);
+                    printf("DIV BX\n");
+                    break;
+
+                default:
+                    printf("Invalid operator\n");
+                    continue;
+            }
+
+            printf("MOV %s,AX\n",result);
+            continue;
+        }
+
+        if(sscanf(line,"%s = %s",result,op1)==2)
+        {
+            printf("MOV AX,%s\n",op1);
+            printf("MOV %s,AX\n",result);
+            continue;
+        }
+
+        printf("Invalid TAC\n");
+    }
+
+    return 0;
+}
